@@ -5,9 +5,14 @@ import org.example.Entity;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class SudokuEntity {
-    private static final int SIZE = 8;
+public class SudokuEntity implements Entity {
+
+    public static final int SIZE = 9;
     private static final String DELIMETER = "-";
+    // ANSI escape code for bold text
+    final String BOLD = "\033[1m";
+    // ANSI escape code to reset formatting
+    final String RESET = "\033[0m";
 
     private int[][] data;
     private Set<String> baseCoordinates;
@@ -41,8 +46,11 @@ public class SudokuEntity {
 
     public SudokuEntity(int[][] data) {
         this.data = data;
-        validate();
         fillBaseCoordinates();
+    }
+
+    public int[][] getData() {
+        return data;
     }
 
     private void fillBaseCoordinates() {
@@ -56,6 +64,12 @@ public class SudokuEntity {
         }
     }
 
+    @Override
+    public int compareTo(Entity entity) {
+        return this.fitness() - entity.fitness();
+    }
+
+    @Override
     public int fitness() {
         if (fitness == null) {
             fitness = 0;
@@ -88,11 +102,21 @@ public class SudokuEntity {
 
     @Override
     public String toString() {
-        return "SudokuEntity{}";
-    }
-
-    private void walk(Consumer<Integer> consumer) {
-
+        StringBuilder builder = new StringBuilder("f = ").append(fitness()).append("\n");
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++) {
+                if (baseCoordinates.contains(i + DELIMETER + j)) {
+                    builder.append(BOLD);
+                }
+                builder.append(data[i][j]).append("\t");
+                if (baseCoordinates.contains(i + DELIMETER + j)) {
+                    builder.append(RESET);
+                }
+            }
+            builder.append("\n");
+        }
+        builder.append("\n\n");
+        return builder.toString();
     }
 
     private String coordinate(int line, int col) {
@@ -104,27 +128,5 @@ public class SudokuEntity {
             valuePlacements.put(value, new ArrayList<>());
         }
         valuePlacements.get(value).add(s);
-    }
-
-    private void validate() {
-        if (data.length != SIZE || !Arrays.stream(data).allMatch(l -> {
-            return l.length == SIZE;
-        })) {
-            throw new IllegalArgumentException("Size of sudoku is not valid!");
-        }
-        validateCells(data);
-        if (fitness() > 0) {
-            throw new IllegalArgumentException("Sudoku is unsolvable!");
-        }
-    }
-
-    private void validateCells(int[][] data) {
-        for (int[] line : data) {
-            for (int cell : line) {
-                if (cell > 9 || cell < 0) {
-                    throw new IllegalArgumentException("Size of sudoku is not valid!");
-                }
-            }
-        }
     }
 }

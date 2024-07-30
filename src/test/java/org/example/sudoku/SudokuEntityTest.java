@@ -79,14 +79,15 @@ public class SudokuEntityTest {
     @Test
     public void constructor_should_create_entity_if_size_is_correct() {
         int[][] data = {
-                new int[8],
-                new int[8],
-                new int[8],
-                new int[8],
-                new int[8],
-                new int[8],
-                new int[8],
-                new int[8]
+                new int[9],
+                new int[9],
+                new int[9],
+                new int[9],
+                new int[9],
+                new int[9],
+                new int[9],
+                new int[9],
+                new int[9]
         };
         SudokuEntity entity = new SudokuEntity(data);
         assertThat(entity).isNotNull();
@@ -95,16 +96,18 @@ public class SudokuEntityTest {
     @Test
     public void fitness_should_calculate_correct_fitness_if_sudoku_is_solvable() {
         int[][] data = {
-                {1,0,2,0,5,0,7,0},
-                {0,0,0,0,0,0,0,0},
-                {3,0,1,0,4,0,5,0},
-                {0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0}
+                {5, 3, 0, 0, 7, 0, 0, 0, 0},
+                {6, 0, 0, 1, 9, 5, 0, 0, 0},
+                {0, 9, 8, 0, 0, 0, 0, 6, 0},
+                {8, 0, 0, 0, 6, 0, 0, 0, 3},
+                {4, 0, 0, 8, 0, 3, 0, 0, 1},
+                {7, 0, 0, 0, 2, 0, 0, 0, 6},
+                {0, 6, 0, 0, 0, 0, 2, 8, 0},
+                {0, 0, 0, 4, 1, 9, 0, 0, 5},
+                {0, 0, 0, 0, 8, 0, 0, 7, 9}
         };
         SudokuEntity entity = new SudokuEntity(data);
+        System.out.println(entity);
         assertThat(entity.fitness()).isEqualTo(0);
     }
 }
