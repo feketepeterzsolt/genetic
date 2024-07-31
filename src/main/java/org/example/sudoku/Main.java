@@ -15,5 +15,6 @@ public class Main {
         };
         SudokuSolver solver = new SudokuSolver(sudoku, 10);
         solver.run(1);
+        solver.printPopulation();
     }
 }

@@ -2,16 +2,15 @@ package org.example.sudoku;
 
 import org.example.Entity;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class SudokuSolver {
 
     private List<SudokuEntity> population;
+    private static Set<String> baseCoordinates;
 
     public SudokuSolver(int[][] sudoku, int populationCount) {
+        fillBaseCoordinates(sudoku);
         population = SudokuEntity.population(sudoku, populationCount);
     }
 
@@ -26,6 +25,21 @@ public class SudokuSolver {
     public void printPopulation() {
         for (SudokuEntity entity : population) {
             System.out.println(entity);
+        }
+    }
+
+    public static Set<String> getBaseCoordinates() {
+        return baseCoordinates;
+    }
+
+    private void fillBaseCoordinates(int[][] sudoku) {
+        baseCoordinates = new HashSet<>();
+        for (int i = 0; i < sudoku.length; i++) {
+            for (int j = 0; j < sudoku[i].length; j++) {
+                if (sudoku[i][j] != 0) {
+                    baseCoordinates.add(SudokuEntity.coordinate(i, j));
+                }
+            }
         }
     }
 

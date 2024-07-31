@@ -13,9 +13,10 @@ public class SudokuEntity implements Entity {
     final String BOLD = "\033[1m";
     // ANSI escape code to reset formatting
     final String RESET = "\033[0m";
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
 
     private int[][] data;
-    private Set<String> baseCoordinates;
     private Integer fitness;
 
     public static List<SudokuEntity> population(int[][] data, int populationCount) {
@@ -46,27 +47,15 @@ public class SudokuEntity implements Entity {
 
     public SudokuEntity(int[][] data) {
         this.data = data;
-        fillBaseCoordinates();
     }
 
     public int[][] getData() {
         return data;
     }
 
-    private void fillBaseCoordinates() {
-        baseCoordinates = new HashSet<>();
-        for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < data[i].length; j++) {
-                if (data[i][j] != 0) {
-                    baseCoordinates.add(coordinate(i, j));
-                }
-            }
-        }
-    }
-
     @Override
     public int compareTo(Entity entity) {
-        return this.fitness() - entity.fitness();
+        return entity.fitness() - this.fitness();
     }
 
     @Override
@@ -105,12 +94,12 @@ public class SudokuEntity implements Entity {
         StringBuilder builder = new StringBuilder("f = ").append(fitness()).append("\n");
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[i].length; j++) {
-                if (baseCoordinates.contains(i + DELIMETER + j)) {
-                    builder.append(BOLD);
+                if (SudokuSolver.getBaseCoordinates().contains(i + DELIMETER + j)) {
+                    builder.append(ANSI_RED);
                 }
                 builder.append(data[i][j]).append("\t");
-                if (baseCoordinates.contains(i + DELIMETER + j)) {
-                    builder.append(RESET);
+                if (SudokuSolver.getBaseCoordinates().contains(i + DELIMETER + j)) {
+                    builder.append(ANSI_RESET);
                 }
             }
             builder.append("\n");
@@ -119,7 +108,7 @@ public class SudokuEntity implements Entity {
         return builder.toString();
     }
 
-    private String coordinate(int line, int col) {
+    public static String coordinate(int line, int col) {
         return line + DELIMETER + col;
     }
 
